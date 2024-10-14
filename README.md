@@ -1,0 +1,1 @@
+This repository contains all directories and associated files required for successful completion of the Backend in Python segment of the Software Engineering specialization program by [ALX Africa](https://www.alxafrica.com/).
