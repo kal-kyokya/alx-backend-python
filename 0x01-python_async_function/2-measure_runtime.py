@@ -2,6 +2,7 @@
 """
 '2-measure_runtime' computes the average time of nested coroutine calls
 """
+import asyncio
 import time
 from typing import List
 
