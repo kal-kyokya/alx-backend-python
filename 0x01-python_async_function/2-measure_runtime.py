@@ -4,14 +4,13 @@
 """
 import asyncio
 import time
-from typing import List
 
 
 wait_n = __import__('1-concurrent_coroutines').wait_n
 
 
-async def measure_runtime(n: int, max_delay: int) -> float:
+def measure_runtime(n: int, max_delay: int) -> float:
     """Calculates the average from a list of values."""
     start: float = time.perf_counter()
-    await wait_n(n, max_delay)
+    asyncio.run(wait_n(n, max_delay))
     return ((time.perf_counter() - start) / n)
