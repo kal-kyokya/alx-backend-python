@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-'0-basic_async_syntax' creates a coroutine, sleeps for X seconds and then return X
+'0-basic_async_syntax' creates a coroutine, sleeps X seconds and then return X
 """
 import asyncio
 import random
