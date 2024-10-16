@@ -10,6 +10,10 @@ async_generator = __import__('0-async_generator').async_generator
 
 async def print_yielded_values():
     result = []
+    print(type(async_generator))
+    print(type(async_generator()))
+    print(async_generator())
+    print(async_generator)
     async for i in async_generator():
         result.append(i)
     print(result)
