@@ -4,6 +4,6 @@
 """
 
 
-def add(a: float, b: float):
+def add(a: float, b: float) -> float:
     """Sums 2 float values"""
     return (a + b)
