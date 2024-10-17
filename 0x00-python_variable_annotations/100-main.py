@@ -1,0 +1,8 @@
+#!/usr/bin/env python3
+
+safe_first_element = __import__('100-safe_first_element').safe_first_element
+
+print(safe_first_element.__annotations__)
+print(safe_first_element([1, 2, 3, "Viva L'Algérie"]))
+print(safe_first_element(["Dem", "Dem", "Dieu avant tout"]))
+print(safe_first_element([]))
