@@ -10,7 +10,7 @@ from utils import access_nested_map, get_json, memoize
 
 class TestAccessNestedMap(unittest.TestCase):
     """
-    class that inherits from unittest.TestCase
+    Class that inherits from unittest.TestCase
     """
     @parameterized.expand([
         ({"a": 1}, ("a",), 1),
@@ -19,7 +19,7 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map(self, nested_map, path, expected):
         """
-        method to test that the method returns what it is supposed to.
+        Method to test that the method returns what it is supposed to.
         """
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
@@ -29,8 +29,30 @@ class TestAccessNestedMap(unittest.TestCase):
     ])
     def test_access_nested_map_exception(self, nested_map, path):
         """
-         test that a KeyError is raised for
-         the following inputs (use @parameterized.expand)
+         Test that a KeyError is raised for a set
+         of inputs (using @parameterized.expand)
         """
         with self.assertRaises(KeyError) as err:
             access_nested_map(nested_map, path)
+
+
+class TestGetJson(unittest.TestCase):
+    """
+    Implement the TestGetJson.test_get_json method
+    to test that utils.get_json returns the expected result.
+    """
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False})
+    ])
+    def test_get_json(self, url, payload):
+        """Test that utils.get_json returns the expected result."""
+        class Mocked(Mock):
+            """Class that inherits from Mock"""
+            def json(self):
+                """inner method returning a payload"""
+                return payload
+
+        with patch("requests.get") as MockClass:
+            MockClass.return_value = Mocked()
+            self.assertEqual(get_json(url), payload)
