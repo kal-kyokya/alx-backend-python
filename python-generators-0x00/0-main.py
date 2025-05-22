@@ -16,7 +16,7 @@ if connection:
         cursor.execute("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'ALX_prodev';")
         result = cursor.fetchone()
         if result:
-            print("Database ALX_prodev is present ")
+            print("Database ALX_prodev is present\n")
         cursor.execute("SELECT * FROM user_data LIMIT 5;")
         rows = cursor.fetchall()
         print(rows)

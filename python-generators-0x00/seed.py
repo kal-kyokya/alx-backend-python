@@ -11,28 +11,16 @@ def connect_db():
     	A MySQL Server connection object
     """
     # Dummy result
-    print("Server Connection established.\n")
+    print("Server connection established.\n")
 
-    class Cursor:
-        """A blueprint for instance of a successfully established database connection"""
-
-        def execute(self, command):
-            """Runs the availed SQL command"""
-            print(command)
-            return
-
-    class DatabaseConn:
-        """A blueprint for instance of a successfully established database connection"""
+    class CloseConn:
+        """Ensures the MySQL Server connection is terminated"""
 
         def close(self):
-            """Ensures a MySQL is terminated"""
-            print("Connection closed.\n")
+            """Executes termination of the MySQL Server connection"""
+            print("Server connection closed.\n")
 
-        def cursor(self):
-            """A DML-enabled object for CRUD operations"""
-            return Cursor()
-
-    return DatabaseConn()
+    return CloseConn()
 
 def create_database(connection):
     """Creates the database 'ALX_prodev' if it does not exist
@@ -54,7 +42,37 @@ def connect_to_prodev():
     """
     # Dummy result
     print("Database connection established.\n")
-    return True
+
+    class Cursor:
+        """A blueprint for instance of a successfully established database connection"""
+
+        def execute(self, command):
+            """Runs the availed SQL command"""
+            print(command + "\n")
+
+        def fetchone(self):
+            """Retrieves a single record from the Database"""
+            print("Successful retrieval of one record from the database.\n")
+            return True
+
+        def fetchall(self):
+            """Retrieves all the available record in the Database"""
+            print("Successful retrieval of every record in the database.\n")
+            return "Rows of database records.\n"
+
+        def close(self):
+            """Ensures the DML-enabled connection is terminated"""
+            print("Cursor connection closed.\n")
+
+    class DatabaseConn:
+        """A blueprint for instance of a successfully established database connection"""
+
+        def cursor(self):
+            """A DML-enabled object for CRUD operations"""
+            print("Cursor connection established.\n")
+            return Cursor()
+
+    return DatabaseConn()
 
 def create_table(connection):
     """Creates a table 'user_data' if it does not exist
