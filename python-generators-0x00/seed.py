@@ -4,39 +4,44 @@
 """
 import os
 from dotenv import load_dotenv
-from mysql.connector import connect, errorcode
+from mysql.connector import connect, Error, errorcode
 
 load_dotenv()
 
-# ---------------------------
-# Database Configuration
-# ---------------------------
+# -----------------------------------
+# MySQl and Database credentials
+# -----------------------------------
 DB_USER = os.getenv("MYSQL_USER")
 DB_HOST = os.getenv("MYSQL_HOST")
 DB_PASSWORD = os.getenv("MYSQL_PASSWORD")
 DB_NAME = os.getenv("MYSQL_DB_NAME")
 DB_TABLE_NAME = os.getenv("MYSQL_DB_TABLE_NAME")
 
+# --------------------------------------------
+# Connect to the MySQL Server (no DB yet)
+# --------------------------------------------
 def connect_db():
-    """Connects to the MySQL database server
+    """Establishes a connection with the MySQL Server
     Args:
     	None
     Return:
     	A MySQL Server connection object
     """
-    # Establish a connection the MySQL server
-    conn = connect(
-        user="jpkk",
-        host="localhost",
-        password=mysql_pwd,
-    )
+    # Try establishing the connection
+    try:
+        conn = connect(
+            user=DB_USER,
+            host=DB_HOST,
+            password=DB_PASSWORD,
+        )
 
-    # Check if the connection was successful
-    if conn.is_connected():
-        return conn
-    else:
-        print("MySQL server connection was not established.")
-        return
+        # Check if the connection was successful
+        if conn.is_connected():
+            return conn
+    except Error as err:
+        print("MySQL server connection was not established.\n")
+        print("Connection error: {}".format(err))
+        return None
 
 def create_database(connection):
     """Creates the database 'ALX_prodev' if it does not exist
