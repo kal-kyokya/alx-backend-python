@@ -43,17 +43,28 @@ def connect_db():
         print("Connection error: {}".format(err))
         return None
 
+# -----------------------------------------
+# Create database if it does not exist
+# -----------------------------------------
 def create_database(connection):
-    """Creates the database 'ALX_prodev' if it does not exist
+    """Creates the database 'DB_NAME' if it does not exist
     Args:
     	connection: A MySQL Server connection object
     Return:
     	None
     """
-    connection.cursor().execute("CREATE DATABASE IF NOT EXISTS ALX_prodev;")
+    # Try creating the database
+    try:
+        sql_query = "CREATE DATABASE IF NOT EXISTS {}".format(DB_NAME)
+        cursor = connection.cursor()
+        cursor.execute(sql_query)
 
-    print("Database created successfully.\n")
-    return
+        print("Database created successfully.\n")
+    except Error as err:
+        print("Database was not created.\n")
+        print("Creation error: {}".format(err))
+    finally:
+        cursor.close()
 
 def connect_to_prodev():
     """Connects to the 'ALX_prodev' database in MySQL
