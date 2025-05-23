@@ -118,6 +118,9 @@ def insert_data(connection, data):
     Return:
     	None
     """
-    # Dummy result
+    sql_query = "INSERT INTO TABLE user_data (name, email, age) VALUES (%s, %s, %s)"
+
+    connection.cursor().execute(sql_query, data)
+
     print("Data successfully inserted in the table.\n")
     return
