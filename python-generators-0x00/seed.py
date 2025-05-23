@@ -39,6 +39,7 @@ def create_database(connection):
     	None
     """
     connection.cursor().execute("CREATE DATABASE IF NOT EXISTS ALX_prodev;")
+
     print("Database created successfully.\n")
     return
 
@@ -49,8 +50,21 @@ def connect_to_prodev():
     Return:
     	A MySQL Database connection object
     """
-    # Dummy result
-    print("Database connection established.\n")
+    # Establish a connection the MySQL server
+    conn = connect(
+        user="jpkk",
+        host="localhost",
+        password=mysql_pwd,
+        database="ALX_prodev"
+    )
+
+    # Check if the connection was successful
+    if conn.is_connected():
+        print("Database connection established.\n")
+        return conn
+    else:
+        print("Database connection was not established.")
+        return
 
     class Cursor:
         """A blueprint for instance of a successfully established database connection"""
@@ -90,7 +104,9 @@ def create_table(connection):
     Return:
         None
     """
-    # Dummy result
+    sql_query = "CREATE TABLE IF NOT EXISTS user_data(user_id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50) NOT NULL, email VARCHAR(50) NULL, age DECIMAL(10, 3) NOT NULL)"
+
+    connection.cursor().execute(sql_query)
     print("Database table successfully created.\n")
     return
 
