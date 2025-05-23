@@ -55,7 +55,8 @@ def connect_to_prodev():
         user="jpkk",
         host="localhost",
         password=mysql_pwd,
-        database="ALX_prodev"
+        database="ALX_prodev",
+        allow_local_infile=True,
     )
 
     # Check if the connection was successful
@@ -104,7 +105,14 @@ def create_table(connection):
     Return:
         None
     """
-    sql_query = "CREATE TABLE IF NOT EXISTS user_data(user_id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50) NOT NULL, email VARCHAR(50) NULL, age DECIMAL(10, 3) NOT NULL)"
+    sql_query = """
+    CREATE TABLE IF NOT EXISTS user_data(
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NULL,
+    age DECIMAL(10, 3) NOT NULL
+    )
+    """
 
     connection.cursor().execute(sql_query)
     print("Database table successfully created.\n")
@@ -118,9 +126,16 @@ def insert_data(connection, data):
     Return:
     	None
     """
-    sql_query = "INSERT INTO TABLE user_data (name, email, age) VALUES (%s, %s, %s)"
+    sql_query = """
+    LOAD DATA INFILE %s
+    INTO TABLE user_data
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+    IGNORE 1 ROWS
+    """
 
-    connection.cursor().execute(sql_query, data)
+    connection.cursor().execute(sql_query, (data,))
 
     print("Data successfully inserted in the table.\n")
     return
