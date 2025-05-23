@@ -3,19 +3,12 @@
 'seed' contains 5 functions enabling set up of the MySQL database 'ALX_prodev' with user data availed in a CSV file
 """
 import os
+from mysql.connector import connect
 from dotenv import load_dotenv
-from mysql.connector import connect, errorcode
 
 load_dotenv()
 
-# ---------------------------
-# Database Configuration
-# ---------------------------
-DB_USER = os.getenv("MYSQL_USER")
-DB_HOST = os.getenv("MYSQL_HOST")
-DB_PASSWORD = os.getenv("MYSQL_PASSWORD")
-DB_NAME = os.getenv("MYSQL_DB_NAME")
-DB_TABLE_NAME = os.getenv("MYSQL_DB_TABLE_NAME")
+mysql_pwd = os.getenv("MYSQL_PASSWORD")
 
 def connect_db():
     """Connects to the MySQL database server
