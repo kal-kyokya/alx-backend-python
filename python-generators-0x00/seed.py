@@ -127,7 +127,7 @@ def insert_data(connection, data):
     	None
     """
     sql_query = """
-    LOAD DATA INFILE %s
+    LOAD DATA LOCAL INFILE %s
     INTO TABLE user_data
     FIELDS TERMINATED BY ','
     ENCLOSED BY '"'
