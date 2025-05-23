@@ -6,7 +6,6 @@ import os
 from mysql.connector import connect
 from dotenv import load_dotenv
 
-
 load_dotenv()
 
 mysql_pwd = os.getenv("MYSQL_PASSWORD")
@@ -27,18 +26,7 @@ def connect_db():
 
     # Check if the connection was successful
     if conn.is_connected():
-        print("Server connection established.\n")
-
-        # Create a class allowing remote termination of the server connection
-        class CloseConn:
-            """Ensures the MySQL Server connection is terminated"""
-
-            def close(self):
-                """Executes termination of the MySQL Server connection"""
-                print(conn.close())
-                print("Server connection closed.\n")
-
-        return CloseConn()
+        return conn
     else:
         print("MySQL server connection was not established.")
         return
@@ -50,7 +38,7 @@ def create_database(connection):
     Return:
     	None
     """
-    # Dummy result
+    connection.cursor().execute("CREATE DATABASE IF NOT EXISTS ALX_prodev;")
     print("Database created successfully.\n")
     return
 
