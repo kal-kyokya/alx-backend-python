@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-seed = __import__('seed')
+import seed
 
 connection = seed.connect_db()
 if connection:

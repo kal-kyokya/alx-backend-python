@@ -2,8 +2,6 @@
 """
 'seed' contains 5 functions enabling set up of the MySQL database 'ALX_prodev' with user data availed in a CSV file
 """
-from mysql.connector import connect
-
 
 def connect_db():
     """Connects to the MySQL database server
@@ -12,23 +10,17 @@ def connect_db():
     Return:
     	A MySQL Server connection object
     """
-    conn = connect(
-        host="localhost",
-        user="jpkk"
-    )
+    # Dummy result
+    print("Server connection established.\n")
 
-    if conn:
-        print("Server connection established.\n")
+    class CloseConn:
+        """Ensures the MySQL Server connection is terminated"""
 
-        class CloseConn:
-            """Ensures the MySQL Server connection is terminated"""
+        def close(self):
+            """Executes termination of the MySQL Server connection"""
+            print("Server connection closed.\n")
 
-            def close(self):
-                """Executes termination of the MySQL Server connection"""
-                print("Server connection closed.\n")
-
-                return CloseConn()
-    raise IOError("MySQL server connection was not established.")
+    return CloseConn()
 
 def create_database(connection):
     """Creates the database 'ALX_prodev' if it does not exist
