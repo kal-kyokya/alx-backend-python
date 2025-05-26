@@ -46,7 +46,7 @@ def stream_users_in_batches(batch_size):
     """
     batch = []
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM {}".format(DB_TABLE_NAME))
+    cursor.execute("SELECT * FROM user_data")
 
     for row in cursor:
         batch.append(row)
@@ -69,3 +69,5 @@ def batch_processing(batch_size):
 
         for row in filtered_batch:
             print(row)
+
+    return
