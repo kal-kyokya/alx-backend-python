@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-
 import seed
+
 
 connect = seed.connect_db()
 

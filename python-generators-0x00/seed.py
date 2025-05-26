@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from mysql.connector import connect, Error
 import csv
 
+
 load_dotenv()
 
 # -----------------------------------

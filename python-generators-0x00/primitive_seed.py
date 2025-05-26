@@ -6,6 +6,7 @@ import os
 from mysql.connector import connect
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 mysql_pwd = os.getenv("MYSQL_PASSWORD")

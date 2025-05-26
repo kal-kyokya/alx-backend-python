@@ -3,6 +3,7 @@
 'seed' contains 5 functions enabling set up of the MySQL database 'ALX_prodev' with user data availed in a CSV file
 """
 
+
 def connect_db():
     """Connects to the MySQL database server
     Args:
