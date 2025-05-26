@@ -93,6 +93,9 @@ def connect_to_prodev():
         print("Connection to {} error: {}".format(DB_NAME, err))
         return None
 
+# ----------------------------
+# Create a Database Table
+# ----------------------------
 def create_table(connection):
     """Creates a table 'user_data' if it does not exist
     Args:
@@ -100,18 +103,28 @@ def create_table(connection):
     Return:
         None
     """
-    sql_query = """
-    CREATE TABLE IF NOT EXISTS user_data(
-    user_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    email VARCHAR(50) NULL,
-    age DECIMAL(10, 3) NOT NULL
+    sql_query = f"""
+    CREATE TABLE IF NOT EXISTS {DB_TABLE_NAME} (
+        user_id INT AUTO_INCREMENT PRIMARY KEY,
+        INDEX(user_id),
+        name VARCHAR(50) NOT NULL,
+        email VARCHAR(50) NULL,
+        age DECIMAL(10, 3) NOT NULL
     )
     """
+    cursor = connection.cursor()
 
-    connection.cursor().execute(sql_query)
-    print("Database table successfully created.\n")
-    return
+    try:
+        cursor.execute(sql_query)
+        connection.commit()
+        print("Database table {} successfully created.\n".format(DB_TABLE_NAME))
+        return
+    except Error as err:
+        print("Database table was not created.")
+        print("Creation of {} error: {}".format(DB_TABLE_NAME, err))
+        return None
+    finally:
+        cursor.close()
 
 def insert_data(connection, data):
     """Inserts data in the database if it does not exist
