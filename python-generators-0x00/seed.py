@@ -4,7 +4,7 @@
 """
 import os
 from dotenv import load_dotenv
-from mysql.connector import connect, Error, errorcode
+from mysql.connector import connect, Error
 import csv
 
 load_dotenv()
@@ -146,7 +146,7 @@ def insert_data(connection, data):
 
             for record in reader:
                 name = record['name']
-                email = record['age']
+                email = record['email']
                 age = float(record['age'])
 
                 sql_select = "SELECT email FROM {} WHERE email = %s".format(DB_TABLE_NAME)
@@ -169,21 +169,3 @@ def insert_data(connection, data):
         connection.rollback()
     finally:
         cursor.close()
-
-# -----------------------------------
-# Generator: Stream rows lazily
-# -----------------------------------
-def stream_user_data(connection):
-    """Sequentially send single row upon 'next()' calls
-    Args:
-    	connection: A MySQL Database connection object
-    Return:
-    	A 'yielded' table record
-    """
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM {}".format(DB_TABLE_NAME))
-
-    for row in cursor:
-        yield row
-
-    cursor.close()
