@@ -51,3 +51,4 @@ def stream_users():
         yield row
 
     cursor.close()
+    connection.close()
