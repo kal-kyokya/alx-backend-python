@@ -65,6 +65,7 @@ def create_database(connection):
         print("Creation error: {}".format(err))
     finally:
         cursor.close()
+
 # -----------------------------------------
 # Establish a connection to a Database
 # -----------------------------------------
@@ -122,28 +123,66 @@ def create_table(connection):
     except Error as err:
         print("Database table was not created.")
         print("Creation of {} error: {}".format(DB_TABLE_NAME, err))
-        return None
     finally:
         cursor.close()
 
+# ---------------------------------------
+# Insert user's data in the database
+# ---------------------------------------
 def insert_data(connection, data):
-    """Inserts data in the database if it does not exist
+    """Inserts data in the database if it does exist
     Args:
     	connection: A MySQL Database connection object
     	data: A CSV file contain the required values
     Return:
     	None
     """
-    sql_query = """
-    LOAD DATA LOCAL INFILE %s
-    INTO TABLE user_data
-    FIELDS TERMINATED BY ','
-    ENCLOSED BY '"'
-    LINES TERMINATED BY '\n'
-    IGNORE 1 ROWS
+    cursor = connection.cursor()
+
+    try:
+        with open(data, newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            for record in reader:
+                name = record['name']
+                email = record['age']
+                age = float(record['age'])
+
+                sql_select = "SELECT email FROM {} WHERE email = %s".format(DB_TABLE_NAME)
+                # Ensure that the user does not exist in the database
+                cursor.execute(sql_select, (email,))
+                if cursor.fetchone():
+                    continue
+
+                sql_insert = f"""
+                INSERT INTO {DB_TABLE_NAME} (name, email, age)
+                VALUES (%s, %s, %s)"""
+
+                cursor.execute(sql_insert, (name, email, age))
+
+            connection.commit()
+            print("Data successfully inserted in the table.\n")
+    except Error as err:
+        print("Data insertion was not completed.")
+        print("Insertion of {} error: {}".format(data, err))
+        connection.rollback()
+    finally:
+        cursor.close()
+
+# -----------------------------------
+# Generator: Stream rows lazily
+# -----------------------------------
+def stream_user_data(connection):
+    """Sequentially send single row upon 'next()' calls
+    Args:
+    	connection: A MySQL Database connection object
+    Return:
+    	A 'yielded' table record
     """
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM {}".format(DB_TABLE_NAME))
 
-    connection.cursor().execute(sql_query, (data,))
+    for row in cursor:
+        yield row
 
-    print("Data successfully inserted in the table.\n")
-    return
+    cursor.close()
