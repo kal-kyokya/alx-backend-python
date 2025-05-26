@@ -5,6 +5,7 @@
 import os
 from dotenv import load_dotenv
 from mysql.connector import connect, Error, errorcode
+import csv
 
 load_dotenv()
 
@@ -79,9 +80,9 @@ def connect_to_prodev():
     # Try establishing a connection the MySQL Database
     try:
         conn = connect(
-            user=DB_USER
-            host=DB_HOST
-            password=DB_PASSWORD
+            user=DB_USER,
+            host=DB_HOST,
+            password=DB_PASSWORD,
             database=DB_NAME
         )
 

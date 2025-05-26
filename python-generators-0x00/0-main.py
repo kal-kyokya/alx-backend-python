@@ -2,10 +2,11 @@
 
 import seed
 
-connection = seed.connect_db()
-if connection:
-    seed.create_database(connection)
-    connection.close()
+connect = seed.connect_db()
+
+if connect:
+    seed.create_database(connect)
+    connect.close()
 
     connection = seed.connect_to_prodev()
 
@@ -21,3 +22,14 @@ if connection:
         rows = cursor.fetchall()
         print(rows)
         cursor.close()
+
+    if connection:
+        print("\nLazy Evaluation with Generators\n")
+        seed.create_table(connection)
+        seed.insert_data(connection, 'user_data.csv')
+
+        for row in seed.stream_user_data(connection):
+            print(row)
+            break
+
+        connection.close()
