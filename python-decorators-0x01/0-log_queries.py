@@ -9,7 +9,7 @@ from datetime import datetime
 
 
 # --------------------------------------------
-# Decorator to function's log SQL Queries
+# Decorator to log function's SQL Queries
 # --------------------------------------------
 def log_queries(func):
     """Logs database queries executed by the 'decorated' function
@@ -36,7 +36,8 @@ def log_queries(func):
 def fetch_all_users(query1, query2):
     """Simulate retrieval of user data from a database
     Args:
-    	query: The SQL query to be executed by the cursor object
+    	query1: The first SQL query to be executed by the cursor object
+    	query2: The second SQL query to be executed by the cursor object
     Return:
     	A list of users in database
     """
