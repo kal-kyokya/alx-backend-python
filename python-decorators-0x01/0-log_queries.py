@@ -1,8 +1,16 @@
+#!/usr/bin/env python3
+"""
+'0-log_queries' creates a decorator that logs database queries executed by any function
+"""
 import sqlite3
 import functools
+import time
+from datetime import datetime
 
-#### decorator to lof SQL queries
 
+# --------------------------------------------
+# Decorator to function's log SQL Queries
+# --------------------------------------------
 def log_queries(func):
     """Logs database queries executed by the 'decorated' function
     Args:
@@ -25,13 +33,25 @@ def log_queries(func):
     return wrapper
 
 @log_queries
-def fetch_all_users(query):
-    conn = sqlite3.connect('users.db')
-    cursor = conn.cursor()
-    cursor.execute(query)
-    results = cursor.fetchall()
-    conn.close()
+def fetch_all_users(query1, query2):
+    """Simulate retrieval of user data from a database
+    Args:
+    	query: The SQL query to be executed by the cursor object
+    Return:
+    	A list of users in database
+    """
+    conn = "Database connection object: sqlite3.connect('players.db')"
+    cursor = "SQL cursor object: conn.cursor()"
+
+    print("cursor.execute({})\n".format(query1))
+    time.sleep(8)
+
+    results = "User list: cursor.fetchall()"
+    print("conn.close()\n")
+
     return results
 
-#### fetch users while logging the query
-users = fetch_all_users(query="SELECT * FROM users")
+# ----------------------------------------
+# Fetch users while logging the query
+# ----------------------------------------
+users = fetch_all_users(query1="SELECT name, jersey_no FROM players", query2="SELECT name, jersey_no FROM players")
