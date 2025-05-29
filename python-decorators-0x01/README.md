@@ -11,7 +11,7 @@ By completing these tasks, I will:
 * <b>Deepen my knowledge of Python decorators</b> and how they can be used to create reusable, efficient, and clean code.
 * <b>Enhance database management skills</b> by automating repetitive tasks like connection handling, logging, and caching.
 * <b>Implement robust transaction management techniques</b> to ensure data integrity and handle errors gracefully.
-* <b>Optimize database queries<b> by leveraging caching mechanisms to reduce redundant calls.
+* <b>Optimize database queries</b> by leveraging caching mechanisms to reduce redundant calls.
 * <b>Build resilience into database operations</b> by implementing retry mechanisms for transient errors.
 * <b>Apply best practices in database interaction</b> for scalable and maintainable Python applications.
 
