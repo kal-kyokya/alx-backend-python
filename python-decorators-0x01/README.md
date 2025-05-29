@@ -24,23 +24,28 @@ By completing these tasks, I will:
 * Strong problem-solving skills and attention to detail.
 
 ## Key Highlights
-Task 0: Logging Database Queries
 
-Create a decorator to log all SQL queries executed by a function.
-Learn to intercept function calls to enhance observability.
-Task 1: Handle Database Connections with a Decorator
+#### Task 0: Logging Database Queries
 
-Automate database connection handling with a decorator.
-Eliminate boilerplate code for opening and closing connections.
-Task 2: Transaction Management Decorator
+* Create a decorator to log all SQL queries executed by a function.
+* Learn to intercept function calls to enhance observability.
 
-Implement a decorator to manage database transactions (commit/rollback).
-Ensure robust error handling and data consistency.
-Task 3: Retry Database Queries
+#### Task 1: Handle Database Connections with a Decorator
 
-Build a decorator to retry database operations on failure.
-Introduce resilience against transient database issues.
-Task 4: Cache Database Queries
+* Automate database connection handling with a decorator.
+* Eliminate boilerplate code for opening and closing connections.
 
-Implement a decorator to cache query results.
-Optimize performance by avoiding redundant database calls.
+#### Task 2: Transaction Management Decorator
+
+* Implement a decorator to manage database transactions (commit/rollback).
+* Ensure robust error handling and data consistency.
+
+#### Task 3: Retry Database Queries
+
+* Build a decorator to retry database operations on failure.
+* Introduce resilience against transient database issues.
+
+#### Task 4: Cache Database Queries
+
+* Implement a decorator to cache query results.
+* Optimize performance by avoiding redundant database calls.
