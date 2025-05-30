@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-'3-retry_on_failure' creates a decorator that retries DB operations if they fail due to transient errors
+'4-cache_query' creates a decorator that caches the results of a database queries in order to avoid redundant calls
 """
 import os
 from dotenv import load_dotenv
 from mysql.connector import connect, Error
 from functools import wraps
 import time
+import hashlib
 
 
 load_dotenv()
-
+dummy_cache = {}
 # -----------------------------------
 # MySQl and Database credentials
 # -----------------------------------
@@ -83,57 +84,62 @@ def with_db_connection(func):
     return wrapper
 
 # -------------------------------------------------------------
-# Decorator retrying operations if they fail due to errors
+# Decorator caching query results to avoid redundant calls
 # -------------------------------------------------------------
 
-def retry_on_failure(retries=3, delay=2):
-    """Handles retry on error during execution of the 'decorated' function
+def cache_query(func):
+    """Handles cache of query result of the 'decorated' function
     Args:
-    	retries: The amount of attemps before an error is raised
-    	delay: The time lapsed between two retries
+    	func: The function to be decorated
     Return:
-    	A 'wrapper' function handling retry of operation on error
+    	A 'wrapper' function handling caching
     """
 
-    def decorator(func):
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            """A wrapper function ensuring retry of an operation on error
-            	Args:
-        		args: An arbitrary number of positional arguments.
-        		kwargs: An arbitrary number of keyword arguments.
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        """A wrapper function ensuring caching of the query
+            Args:
+        	args: An arbitrary number of positional arguments.
+        	kwargs: An arbitrary number of keyword arguments.
             Return:
-        		None
-            """
-            attempts = 0
+		None
+        """
+        query = kwargs['query']
+        cache_key = hashlib.sha256(query.encode()).hexdigest()
 
-            while attempts < retries:
-                try:
-                    result = func(*args, **kwargs)
-                except Exception as err:
-                    attempt += 1
-                    if attempts == retries:
-                        print("3 attempts were made to {}:\n {}.\n".format(DB_NAME, err))
-                    time.sleep(delay)
-                else:
-                    print("Fetch of users from {} - successful.\n".format(DB_NAME))
-                    return  result
-        return wrapper
-    return decorator
+        if cache_key in dummy_cache.keys():
+            print("Returning from cache\n")
+            return dummy_cache[cache_key]
+        else:
+            try:
+                result = func(*args, **kwargs)
+            except Exception as err:
+                print("Caching of query to {} failed:\n {}.\n".format(DB_NAME, err))
+            else:
+                dummy_cache[cache_key] = result
+                print("Caching for query on {} - successful.\n".format(DB_NAME))
+
+                for cache in dummy_cache:
+                    print(cache)
+                print()
+
+                return  result
+
+    return wrapper
 
 @with_db_connection
-@retry_on_failure(retries=3, delay=1)
-def fetch_users_with_retry(conn):
-    """Fetch all users from the database
+@cache_query
+def fetch_users_with_cache(conn, query):
+    """Fetch all users from the database while caching query
     Args:
     	conn: The DB connection object enable data manipulation
+    	query: The SQL query to be executed by the cursor
     Return:
     	A list containing the users as an dictionary objects
     """
     cursor = conn.cursor()
 
-    sql_query = "SELECT * FROM {} LIMIT 5".format(DB_TABLE_NAME)
-    cursor.execute(sql_query)
+    cursor.execute(query)
 
     return cursor.fetchall()
 
@@ -141,7 +147,19 @@ def fetch_users_with_retry(conn):
 # Fetch all users with automatic retry on failure
 # -----------------------------------------------------
 
-users = fetch_users_with_retry()
+sql_query1 = "SELECT * FROM {} LIMIT 3".format(DB_TABLE_NAME)
+sql_query2 = "SELECT * FROM {} LIMIT 5".format(DB_TABLE_NAME)
+sql_query3 = "SELECT * FROM {} LIMIT 3".format(DB_TABLE_NAME)
 
-for user in users:
+users1 = fetch_users_with_cache(query=sql_query1)
+users2 = fetch_users_with_cache(query=sql_query2)
+users3 = fetch_users_with_cache(query=sql_query3)
+
+for user in users1:
+    print(user)
+print("--")
+for user in users2:
+    print(user)
+print("--")
+for user in users3:
     print(user)
