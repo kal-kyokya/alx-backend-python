@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-'2-transactional' creates a decorator that manages database transactions by automatically committing or rolling back changes
+'3-retry_on_failure' creates a decorator that retries DB operations if they fail due to transient errors
 """
 import os
 from dotenv import load_dotenv
@@ -82,65 +82,65 @@ def with_db_connection(func):
 
     return wrapper
 
-# ---------------------------------------------------------------
-# Decorator ensuring rollback on error or commmit on success
-# ---------------------------------------------------------------
+# -------------------------------------------------------------
+# Decorator retrying operations if they fail due to errors
+# -------------------------------------------------------------
 
-def transactional(func):
-    """Handles rollbacks or commmits after execution of the 'decorated' function
+def retry_on_failure(retries=3, delay=2):
+    """Handles retry on error during execution of the 'decorated' function
     Args:
     	func: The function to be decorated
     Return:
     	A 'wrapper' function handling rollback or commit actions
     """
 
-    @wraps(func)
-    def wrapper(conn, *args, **kwargs):
-        """A wrapper function ensuring rollback on error or commmit on success
-        Args:
-        	conn: The DB connection object enable data manipulation
-        	args: An arbitrary number of positional arguments.
-        	kwargs: An arbitrary number of keyword arguments.
-        Return:
-        	None
-        """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            """A wrapper function ensuring retry of an operation on error
+            	Args:
+        		args: An arbitrary number of positional arguments.
+        		kwargs: An arbitrary number of keyword arguments.
+            Return:
+        		None
+            """
+            attempts = 0
 
-        try:
-            result = func(conn, *args, **kwargs)
-        except Exception as err:
-            conn.rollback()
-            print("DB connection to {} was rollback due to:\n {}.\n".format(DB_NAME, err))
-        else:
-            conn.commit()
-            print("Update on {} was successful.\n".format(DB_NAME))
-            return  result
-
-    return wrapper
+            while attempts < retries:
+                try:
+                    result = func(*args, **kwargs)
+                except Exception as err:
+                    attempt += 1
+                    if attempts == retries:
+                        print("3 attempts were made to {}:\n {}.\n".format(DB_NAME, err))
+                    time.sleep(delay)
+                else:
+                    print("Fetch of users from {} - successful.\n".format(DB_NAME))
+                    return  result
+        return wrapper
+    return decorator
 
 @with_db_connection
-@transactional
-def update_user_details(conn, user_id, new_email):
-    """Updates a user's infos in the database
+@retry_on_failure(retries=3, delay=1)
+def fetch_users_with_retry(conn):
+    """Fetch all users from the database
     Args:
     	conn: The DB connection object enable data manipulation
-    	user_id: The ID of the sought for user
-    	new_email: The replacement email
     Return:
-    	A list of one element containing the user as an object
+    	A list containing the users as an dictionary objects
     """
     cursor = conn.cursor()
 
-    sql_query = f"""
-    	UPDATE {DB_TABLE_NAME}
-    	SET email = %s
-    	WHERE user_id = %s"""
-    cursor.execute(sql_query, (new_email, user_id,))
+    sql_query = "SELECT * FROM {} LIMIT 5".format(DB_TABLE_NAME)
+    cursor.execute(sql_query)
 
-    return cursor.fetchone()
+    return cursor.fetchall()
 
 # -----------------------------------------------------
-# Update a user's name and email based on their ID
+# Fetch all users with automatic retry on failure
 # -----------------------------------------------------
 
-print(update_user_details(user_id=2,
-                           new_email='dem@email.com'))
+users = fetch_users_with_retry()
+
+for user in users:
+    print(user)
