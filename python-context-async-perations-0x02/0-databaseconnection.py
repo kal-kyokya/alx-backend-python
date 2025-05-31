@@ -74,7 +74,7 @@ print("Before the class based Context manager\n")
 
 with DatabaseConnection() as conn:
     cursor = conn.cursor()
-    cursor.execute("SELECT name, email FROM {} LIMIT 5".format(DB_TABLE_NAME))
+    cursor.execute("SELECT * FROM users")
 
     for user in cursor.fetchall():
         print(user)
