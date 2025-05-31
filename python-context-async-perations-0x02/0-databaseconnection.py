@@ -66,17 +66,19 @@ class DatabaseConnection:
             raise err
 
 
-# ---------------------------------------
-# Run a test SQL query on the class
-# ---------------------------------------
-print("Before the class based Context manager\n")
+if __name__ == "__main__":
 
-with DatabaseConnection() as conn:
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
+    # ---------------------------------------
+    # Run a test SQL query on the class
+    # ---------------------------------------
+    print("Before the class based Context manager\n")
 
-    for user in cursor.fetchall():
-        print(user)
-    print("")
+    with DatabaseConnection() as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users")
 
-print("After the class based Context manager\n")
+        for user in cursor.fetchall():
+            print(user)
+        print("")
+
+    print("After the class based Context manager\n")

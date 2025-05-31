@@ -73,17 +73,19 @@ class ExecuteQuery:
             raise err
 
 
-# ---------------------------------------
-# Run a test SQL query on the class
-# ---------------------------------------
-print("Before the class based Context manager\n")
+if __name__ == "__main__":
+    
+    # ---------------------------------------
+    # Run a test SQL query on the class
+    # ---------------------------------------
+    print("Before the class based Context manager\n")
 
-sql_query = "SELECT * FROM users WHERE age > %s"
-query_param = (5,)
+    sql_query = "SELECT * FROM users WHERE age > %s"
+    query_param = (5,)
 
-with ExecuteQuery(sql_query, query_param) as results:
-    for user in results:
-        print(user)
-    print("")
+    with ExecuteQuery(sql_query, query_param) as results:
+        for user in results:
+            print(user)
+        print("")
 
-print("After the class based Context manager\n")
+    print("After the class based Context manager\n")
