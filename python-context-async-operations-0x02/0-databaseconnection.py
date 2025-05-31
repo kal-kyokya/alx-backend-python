@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-'0-databaseconnection' creates a class based context mananger to handle opening and closing database connections automatically
+'0-databaseconnection' creates a class based context mananger that handles opening and closing database connections automatically
 """
 import os
 from dotenv import load_dotenv
@@ -26,11 +26,10 @@ class DatabaseConnection:
     """
 
     def __init__(self):
-        """Initializes the class instance with a connection attribute
+        """Initializes the class instance
         Args:
         	self: An internal representation of the class' instantiation
         """
-        # self.conn = None
         pass
 
     def __enter__(self):

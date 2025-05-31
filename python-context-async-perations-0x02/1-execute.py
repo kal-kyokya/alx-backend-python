@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-'0-databaseconnection' creates a class based context mananger that handles opening and closing database connections automatically
+'1-execute' creates a reusable class based context mananger that manages database connections and query execution
 """
 import os
 from dotenv import load_dotenv
@@ -19,21 +19,24 @@ DB_NAME = os.getenv("MYSQL_DB_NAME")
 DB_TABLE_NAME = os.getenv("MYSQL_DB_TABLE_NAME")
 
 
-class DatabaseConnection:
-    """Handles opening and closing of database connections
+class ExecuteQuery:
+    """Manages DB connections and SQL query execution
     Args:
     	None
     """
 
-    def __init__(self):
-        """Initializes the class instance
+    def __init__(self, query, query_param):
+        """Initializes the class instance with the SQL query
         Args:
         	self: An internal representation of the class' instantiation
+        	query: The SQL command to be executed
+        	query_param: The value to be passed to the SQL query
         """
-        pass
+        self.query = query
+        self.query_param = query_param
 
     def __enter__(self):
-        """Gets executed upon class instantiation and sets up the DB connection
+        """Gets executed upon class instantiation, handles connection and query execution
         Args:
         	self: An internal representation of the class' instantiation
         """
@@ -46,10 +49,14 @@ class DatabaseConnection:
                 database=DB_NAME
             )
             self.conn = conn
-            print("DB connection to {} - established successfully\n".format(DB_NAME))
-            return conn
+            print("DB connection to {} - Established successfully\n".format(DB_NAME))
+
+            cursor = conn.cursor()
+            cursor.execute(self.query, self.query_param)
+            
+            return cursor.fetchall()
         except Error as err:
-            print("Connection to {} failed".format(DB_NAME))
+            print("Operating on {} - Failed".format(DB_NAME))
             raise err
 
     def __exit__(self, exc_type, exc_value, exc_tb):
@@ -60,9 +67,9 @@ class DatabaseConnection:
 
         try:
             self.conn.close()
-            print("DB connection to {} - closed successfully\n".format(DB_NAME))
+            print("DB connection to {} - Closed successfully\n".format(DB_NAME))
         except Error as err:
-            print("Closing the DB connection for {} failed".format(DB_NAME))
+            print("Closing the DB connection for {} - Failed".format(DB_NAME))
             raise err
 
 
@@ -71,11 +78,11 @@ class DatabaseConnection:
 # ---------------------------------------
 print("Before the class based Context manager\n")
 
-with DatabaseConnection() as conn:
-    cursor = conn.cursor()
-    cursor.execute("SELECT * FROM users")
+sql_query = "SELECT name, email FROM {} LIMIT %s".format(DB_TABLE_NAME)
+query_param = (5,)
 
-    for user in cursor.fetchall():
+with ExecuteQuery(sql_query, query_param) as results:
+    for user in results:
         print(user)
     print("")
 
