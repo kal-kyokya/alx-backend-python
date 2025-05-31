@@ -78,7 +78,7 @@ class ExecuteQuery:
 # ---------------------------------------
 print("Before the class based Context manager\n")
 
-sql_query = "SELECT name, email FROM {} LIMIT %s".format(DB_TABLE_NAME)
+sql_query = "SELECT name, email, age FROM {} WHERE age < %s LIMIT 5".format(DB_TABLE_NAME)
 query_param = (5,)
 
 with ExecuteQuery(sql_query, query_param) as results:
