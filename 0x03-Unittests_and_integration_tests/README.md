@@ -21,7 +21,7 @@ At the end of this project, I expect to be able to explain to anyone, without th
 - Common testing patterns such as mocking, parametrizations and fixtures
 
 ## Requirements
-
+```
 	->	All files will be interpreted/compiled on Ubuntu 20+ LTS using python3 (version 3.9+)
 	->	All files should end with a new line
 	->	The first line of all files should be exactly ```#!/usr/bin/env python3```
@@ -37,3 +37,4 @@ At the end of this project, I expect to be able to explain to anyone, without th
 			```python3 -c 'print(__import__("my_module").MyClass.my_function.__doc__)'```
 	->	A documentation is not a simple word, it’s a real sentence explaining what’s the purpose of the module, class or method
 	->	All functions and coroutines must be type-annotated.
+```
