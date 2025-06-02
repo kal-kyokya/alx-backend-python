@@ -11,7 +11,7 @@ def connect_db():
     Return:
     	A MySQL Server connection object
     """
-    # Mocked result
+    # Dummy result
     print("Server connection established.\n")
 
     class CloseConn:
@@ -30,7 +30,7 @@ def create_database(connection):
     Return:
     	None
     """
-    # Mocked result
+    # Dummy result
     print("Database created successfully.\n")
     return
 
@@ -41,7 +41,7 @@ def connect_to_prodev():
     Return:
     	A MySQL Database connection object
     """
-    # Mocked result
+    # Dummy result
     print("Database connection established.\n")
 
     class Cursor:
@@ -82,7 +82,7 @@ def create_table(connection):
     Return:
         None
     """
-    # Mocked result
+    # Dummy result
     print("Database table successfully created.\n")
     return
 
@@ -94,6 +94,6 @@ def insert_data(connection, data):
     Return:
     	None
     """
-    # Mocked result
+    # Dummy result
     print("Data successfully inserted in the table.\n")
     return
