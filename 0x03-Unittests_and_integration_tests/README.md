@@ -17,8 +17,8 @@ $ python -m unittest path/to/test_file.py
 
 At the end of this project, I expect to be able to explain to anyone, without the help of Google:
 
-- The difference between unit and integration tests.
-- Common testing patterns such as mocking, parametrizations and fixtures
+- The difference between ```unit``` and ```integration tests```.
+- Common testing patterns such as ```mocking```, ```parametrizations``` and ```fixtures```.
 
 ## Requirements
 ```
