@@ -89,8 +89,8 @@ def with_db_connection(func):
 def retry_on_failure(retries=3, delay=2):
     """Handles retry on error during execution of the 'decorated' function
     Args:
-    	retries: The amount of attemps before an error is raised
-    	delay: The time lapsed between two retries
+    	retries: The amount of attempts before an error is raised
+    	delay: The time lapse between two retries
     Return:
     	A 'wrapper' function handling retry of operation on error
     """
