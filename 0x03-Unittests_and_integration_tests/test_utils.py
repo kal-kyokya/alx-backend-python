@@ -32,3 +32,19 @@ class TestAccessNestedMap(unittest.TestCase):
         	Raises an 'Exception' if the test fails, None otherwise
         """
         self.assertEqual(access(nested_map, path), expected)
+
+    @parameterized.expand([
+        ({}, ("a",)),
+        ({"a": 1}, ("a","b")),
+    ])
+    def test_access_nested_map_exception(self, nested_map, path):
+        """Test method asserting the return value of 'utils.access_nested_method'
+        Args:
+        	self: Object in which all inherited methods, properties and attributes are stored
+        	nested_map: The dictionary to be traversed by 'utils.access_nested_map'
+        	path: A tuple guiding traversal of the dictionary
+        Return:
+        	Raises an 'Exception' if the test fails, None otherwise
+        """
+        with self.assertRaises(KeyError):
+            access(nested_map, path)
