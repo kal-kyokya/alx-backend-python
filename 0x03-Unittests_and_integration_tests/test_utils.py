@@ -7,7 +7,7 @@ import unittest
 from parameterized import parameterized
 
 
-access = utils.access_nested_map()
+access = utils.access_nested_map
 
 
 class TestAccessNestedMap(unittest.TestCase):
@@ -18,68 +18,93 @@ class TestAccessNestedMap(unittest.TestCase):
 
     @parameterized.expand(
         [
-            ("me", {
-                'human': {
-                    'african': {
-                        'congolese': {
-                            'name': 'Jean-Paul De Marie KYOKYA KALULU',
+            (
+                "me",
+                {
+                    "human": {
+                        "african": {
+                            "congolese": {
+                                "name": "Jean-Paul De Marie KYOKYA KALULU",
+                            }
                         }
                     }
-                }
-            }, ('human', 'african', 'congolese', 'name')),
-            ("age", {
-                'human': {
-                    'african': {
-                        'congolese': {
-                            'name': 'Jean-Paul De Marie KYOKYA KALULU',
-                            'age': 72,
+                },
+                ("human", "african", "congolese", "name"),
+                "Jean-Paul De Marie KYOKYA KALULU"
+            ),
+            (
+                "age",
+                {
+                    "human": {
+                        "african": {
+                            "congolese": {
+                                "name": "Jean-Paul De Marie KYOKYA KALULU",
+                                "age": 72,
+                            }
                         }
                     }
-                }
-            }, ('human', 'african', 'congolese', 'age')),
-            ("belief", {
-                'human': {
-                    'african': {
-                        'congolese': {
-                            'name': 'Jean-Paul De Marie KYOKYA KALULU'
-                            'age': 72,
-                            'belief': 'truth',
+                },
+                ("human", "african", "congolese", "age"),
+                72
+            ),
+            (
+                "belief",
+                {
+                    "human": {
+                        "african": {
+                            "congolese": {
+                                "name": "Jean-Paul De Marie KYOKYA KALULU",
+                                "age": 72,
+                                "belief": "truth",
+                            }
                         }
                     }
-                }
-            }, ('human', 'african', 'congolese', 'belief')),
-            ("value", {
-                'human': {
-                    'african': {
-                        'congolese': {
-                            'name': 'Jean-Paul De Marie KYOKYA KALULU'
-                            'age': 72,
-                            'belief': 'truth',
-                            'value': 'inner-peace',
+                },
+                ("human", "african", "congolese", "belief"),
+                "truth"
+            ),
+            (
+                "value",
+                {
+                    "human": {
+                        "african": {
+                            "congolese": {
+                                "name": "Jean-Paul De Marie KYOKYA KALULU",
+                                "age": 72,
+                                "belief": "truth",
+                                "value": "inner-peace",
+                            }
                         }
                     }
-                }
-            }, ('human', 'african', 'congolese', 'value')),
-            ("worldview", {
-                'human': {
-                    'african': {
-                        'congolese': {
-                            'name': 'Jean-Paul De Marie KYOKYA KALULU'
-                            'age': 72,
-                            'belief': 'truth',
-                            'value': 'inner-peace',
-                            'worldview': 'Chaos & Order',
+                },
+                ("human", "african", "congolese", "value"),
+                "inner-peace"
+            ),
+            (
+                "worldview",
+                {
+                    "human": {
+                        "african": {
+                            "congolese": {
+                                "name": "Jean-Paul De Marie KYOKYA KALULU",
+                                "age": 72,
+                                "belief": "truth",
+                                "value": "inner-peace",
+                                "worldview": "Chaos & Order",
+                            }
                         }
                     }
-                }
-            }, ('human', 'african', 'congolese', 'worldview')),
+                },
+                ("human", "african", "congolese", "worldview"),
+                "Chaos & Order"
+            ),
         ]
     )
-    def test_access_nested_map(self):
+    def test_access_nested_map(self, name, nested_map, path, expected):
         """Test method asserting the return value of 'utils.access_nested_method'
         Args:
         	self: Object in which all inherited methods, properties and attributes are stored
         Return:
         	Raises an 'Exception' if the test fails, None otherwise
         """
-        self.assertEqual()
+        self.assertEqual(access(nested_map, path), expected)
