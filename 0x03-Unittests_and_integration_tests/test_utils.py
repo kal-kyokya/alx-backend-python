@@ -104,6 +104,10 @@ class TestAccessNestedMap(unittest.TestCase):
         """Test method asserting the return value of 'utils.access_nested_method'
         Args:
         	self: Object in which all inherited methods, properties and attributes are stored
+        	name: Assigns the parameterized test case a unique name
+        	nested_map: The dictionary to be traversed by 'utils.access_nested_map'
+        	path: A tuple guiding traversal of the dictionary
+        	expected: The correct return value upon traversal
         Return:
         	Raises an 'Exception' if the test fails, None otherwise
         """
