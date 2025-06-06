@@ -5,15 +5,17 @@
 import utils
 import unittest
 from parameterized import parameterized
+import requests
 
 
 access = utils.access_nested_map
+g_js = utils.get_json
 
 
 class TestAccessNestedMap(unittest.TestCase):
-    """A collection of methods aiming to test the functioning of a built-in function.
+    """A collection of methods testing the 'access_nested_map' built-in function.
     Inheritance:
-    	unittest.TestCase: Class defining assertion functions required for acutal testing.
+    	unittest.TestCase: Class defining assertion functions required for actual testing.
     """
 
     @parameterized.expand(
@@ -208,3 +210,24 @@ class TestAccessNestedMap(unittest.TestCase):
         """
         with self.assertRaises(AssertionError):
             self.assertEqual(access(nested_map, path), expected)
+
+
+class TestGetJson(unittest.TestCase):
+    """A collection of methods testing the functioning of the 'get_json' built-in function.
+    Inheritance:
+    	unittest.TestCase: Class defining assertion functions required for actual testing.
+    """
+
+    def test_get_json(self):
+        """Ensure that 'utils.get_json' returns the expected value
+        Args:
+        	self: Object storing all 'unittest.TestCase' inherited methods
+        Return:
+        	Raises an AssertionError if test fails, None otherwise
+        """
+        self.assertEqual(
+            get_json(
+                requests.get(url)
+            ),
+            "Expected results"
+        )
