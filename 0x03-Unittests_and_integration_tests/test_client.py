@@ -186,3 +186,44 @@ class TestGithubOrgClient(unittest.TestCase):
         Test function for GithubOrgClient.has_license
         """
         self.assertIs(GithubOrgClient.has_license(repo, license_key), status)
+
+
+@parameterized_class([
+    {
+        "org_payload": fixtures.TEST_PAYLOAD[0][0],
+        "repos_payload": fixtures.TEST_PAYLOAD[0][1],
+        "expected_repos": fixtures.TEST_PAYLOAD[0][2],
+        "apache2_repos": fixtures.TEST_PAYLOAD[0][3]
+        }
+])
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """
+    Integration Test Suite
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        """
+        Sets ups mocks for requests.get to return
+        example payloads found in the fixtures.
+        """
+        cls.get_patcher = patch("requests.get")
+        cls.mock_get = cls.get_patcher.start()
+
+        mock_org_response = MagicMock()
+        mock_org_response.json.return_value = cls.org_payload
+
+        mock_repos_response = MagicMock()
+        mock_repos_response.json.return_value = cls.repos_payload
+
+        cls.mock_get.side_effect = [
+            mock_org_response,
+            mock_repos_response,
+            ]
+
+    @classmethod
+    def tearDownClass(cls):
+        """
+        class method to stop the patcher
+        """
+        cls.get_patcher.stop()
