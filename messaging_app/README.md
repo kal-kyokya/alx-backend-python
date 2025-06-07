@@ -66,11 +66,11 @@ Follow RESTful naming conventions: ```/api/properties/```, ```/api/bookings/<id>
 
 | Area | Best Practices |
 |------|----------------|
-| Project Structure | Keep a modular structure with reusable apps, consistent naming, and organized folders (apps/, core/, etc.) |
-| Environment Config | Use .env files and django-environ to manage secret keys and settings |
-| Models | Avoid business logic in models; use helper functions or managers when necessary |
-| Migrations | Commit migration files and test them on a fresh database |
-| Routing | Namespace routes and separate admin/API/user-related URLs for clarity |
-| Security | Use ALLOWED_HOSTS, avoid hardcoding credentials, and enable CORS properly |
-| Testing | Use Django’s test client or tools like Postman to validate endpoints early and often |
-| Documentation | Add inline comments, maintain a clear README, and use tools like Swagger or DRF’s built-in docs |
+| **Project Structure** | Keep a modular structure with reusable apps, consistent naming, and organized folders (apps/, core/, etc.) |
+| **Environment Config** | Use .env files and django-environ to manage secret keys and settings |
+| **Models** | Avoid business logic in models; use helper functions or managers when necessary |
+| **Migrations** | Commit migration files and test them on a fresh database |
+| **Routing** | Namespace routes and separate admin/API/user-related URLs for clarity |
+| **Security** | Use ALLOWED_HOSTS, avoid hardcoding credentials, and enable CORS properly |
+| **Testing** | Use Django’s test client or tools like Postman to validate endpoints early and often |
+| **Documentation** | Add inline comments, maintain a clear README, and use tools like Swagger or DRF’s built-in docs |
