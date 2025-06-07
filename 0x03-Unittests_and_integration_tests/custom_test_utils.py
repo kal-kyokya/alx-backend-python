@@ -213,7 +213,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
-    """A collection of methods testing the functioning of the 'get_json' built-in function.
+    """A collection of methods testing the functioning of the 'utils.get_json' function.
     Inheritance:
     	unittest.TestCase: Class defining assertion functions required for actual testing.
     """

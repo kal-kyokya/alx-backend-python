@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 access = utils.access_nested_map
 g_js = utils.get_json
-
+memo = utils.memoize
 
 class TestAccessNestedMap(unittest.TestCase):
     """A collection of methods aiming to test the functioning of a built-in function.
@@ -53,7 +53,7 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
-    """A collection of methods testing the functioning of the 'get_json' built-in function.
+    """A collection of methods testing the functioning of the 'utils.get_json' function.
     Inheritance:
     	unittest.TestCase: Class defining assertion functions required for actual testing.
     """
@@ -64,7 +64,7 @@ class TestGetJson(unittest.TestCase):
     ])
     @patch("requests.get")
     def test_get_json(self, url, payload, mock_get):
-        """Ensure that 'utils.get_json' returns the expected value
+        """Ensures that 'utils.get_json' returns an expected payload value
         Args:
         	self: Object storing all 'unittest.TestCase' inherited methods
         	name: String to be attached to parameterized tests
@@ -77,3 +77,35 @@ class TestGetJson(unittest.TestCase):
         mock_get.return_value.json.return_value = payload
 
         self.assertEqual(g_js(url), payload)
+
+
+class TestMemoize(unittest.TestCase):
+    """A collection of methods testing the functioning of the 'utils.memoize' function.
+    Inheritance:
+    	unittest.TestCase: Class defining assertion functions required for actual testing.
+    """
+
+    class TestClass:
+
+        def a_method(self):
+            return 42
+
+        @memo
+        def a_property(self):
+            return self.a_method()
+
+    @patch("test_utils.TestMemoize.TestClass.a_method")
+    def test_memoize(self, mock_method):
+        """Ensures that 'utils.memoize' prevents more than one call to 'a_method'
+        Args:
+        	self: Object storing all 'unittest.TestCase' inherited methods
+        	mock_method: The mock object replacing any call to 'a_method'
+        Return:
+        	Raises an AssertionError if test fails, None otherwise
+        """
+        test = self.TestClass()
+
+        test.a_property()
+        test.a_property()
+
+        mock_method.assert_called_once()
