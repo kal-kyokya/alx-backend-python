@@ -53,7 +53,9 @@ class TestAccessNestedMap(unittest.TestCase):
 
 
 class TestGetJson(unittest.TestCase):
-    """
+    """A collection of methods testing the functioning of the 'get_json' built-in function.
+    Inheritance:
+    	unittest.TestCase: Class defining assertion functions required for actual testing.
     """
 
     @parameterized.expand([
@@ -62,7 +64,15 @@ class TestGetJson(unittest.TestCase):
     ])
     @patch("requests.get")
     def test_get_json(self, url, payload, mock_get):
-        """
+        """Ensure that 'utils.get_json' returns the expected value
+        Args:
+        	self: Object storing all 'unittest.TestCase' inherited methods
+        	name: String to be attached to parameterized tests
+        	url: String locating the desired web resource
+	        payload: The expected dictionary returned after the get request
+        	mock_get: The mock object replacing any call to 'requests.get'
+        Return:
+        	Raises an AssertionError if test fails, None otherwise
         """
         mock_get.return_value.json.return_value = payload
 

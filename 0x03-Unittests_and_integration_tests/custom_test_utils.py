@@ -235,6 +235,10 @@ class TestGetJson(unittest.TestCase):
         """Ensure that 'utils.get_json' returns the expected value
         Args:
         	self: Object storing all 'unittest.TestCase' inherited methods
+        	name: String to be attached to parameterized tests
+        	url: String locating the desired web resource
+	        payload: The expected dictionary returned after the get request
+        	mock_get: The mock object replacing any call to 'requests.get'
         Return:
         	Raises an AssertionError if test fails, None otherwise
         """
