@@ -227,3 +227,14 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
         class method to stop the patcher
         """
         cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        """
+        Test function for GithubOrgClient.public_repos
+        """
+        client = GithubOrgClient('google')
+        self.assertEqual(
+            client._public_repos_url, self.org_payload["repos_url"]
+            )
+        repos = client.public_repos()
+        self.assertListEqual(repos, self.expected_repos)
