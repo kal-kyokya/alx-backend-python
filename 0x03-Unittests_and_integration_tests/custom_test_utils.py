@@ -5,7 +5,7 @@
 import utils
 import unittest
 from parameterized import parameterized
-import requests
+from unittest.mock import patch
 
 
 access = utils.access_nested_map
@@ -218,16 +218,26 @@ class TestGetJson(unittest.TestCase):
     	unittest.TestCase: Class defining assertion functions required for actual testing.
     """
 
-    def test_get_json(self):
+    @parameterized.expand([
+        (
+            "futtech",
+            "https://jsonplaceholder.typicode.com/comments/1",
+            {'postId': 1, 'id': 1, 'name': 'id labore ex et quam laborum', 'email': 'Eliseo@gardner.biz', 'body': 'laudantium enim quasi est quidem magnam voluptate ipsam eos\ntempora quo necessitatibus\ndolor quam autem quasi\nreiciendis et nam sapiente accusantium'}
+        ),
+        (
+            "eviot",
+            "https://jsonplaceholder.typicode.com/users/1",
+            {'id': 1, 'name': 'Leanne Graham', 'username': 'Bret', 'email': 'Sincere@april.biz', 'address': {'street': 'Kulas Light', 'suite': 'Apt. 556', 'city': 'Gwenborough', 'zipcode': '92998-3874', 'geo': {'lat': '-37.3159', 'lng': '81.1496'}}, 'phone': '1-770-736-8031 x56442', 'website': 'hildegard.org', 'company': {'name': 'Romaguera-Crona', 'catchPhrase': 'Multi-layered client-server neural-net', 'bs': 'harness real-time e-markets'}}
+        ),
+    ])
+    @patch('requests.get')
+    def test_get_json(self, name, url, payload, mock_get):
         """Ensure that 'utils.get_json' returns the expected value
         Args:
         	self: Object storing all 'unittest.TestCase' inherited methods
         Return:
         	Raises an AssertionError if test fails, None otherwise
         """
-        self.assertEqual(
-            get_json(
-                requests.get(url)
-            ),
-            "Expected results"
-        )
+        mock_get.return_value.json.return_value = payload
+
+        self.assertEqual(g_js(url), payload)
