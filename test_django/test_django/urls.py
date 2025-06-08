@@ -16,12 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from ..my_app.views import BookListCreateAPIView
+from my_app.views import BookListCreateAPIView
+from my_app import views
+from django.http import HttpResponse
+from django.shortcuts import redirect
+
+
+def home(request):
+    return HttpResponse('<h1 style="color:#0D1C23;"}>Welcome to Dem Bank</h1>')
 
 urlpatterns = [
     path(
         'admin/',
         admin.site.urls
+    ),
+    path(
+        '',
+        home
     ),
     path(
         'api/books',
