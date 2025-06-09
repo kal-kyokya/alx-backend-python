@@ -1,7 +1,0 @@
-DB_NAME=jpkk
-DB_HOST=localhost
-DB_PORT=3306
-DB_PASSWORD=1Mysql!
-DB_NAME=alxtravel
-DEBUG=True
-SECRET_KEY=django-2!@3*mwbzqdsaeh6pl_n(nqa5hwp6#mljs#-k%9!u_#8#*bc8o
