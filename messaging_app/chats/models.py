@@ -19,7 +19,6 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=25)
     phone_number = models.CharField(max_length=12)
-    password = None
 
     def __str__(self):
         """Custom representation of instance upon print operation
