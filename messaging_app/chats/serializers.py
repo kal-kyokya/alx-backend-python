@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from models. import User, Message, Conversation
+from models. import (User, Message, Conversation)
 
 class UserSerializer(serializers.ModelSerializer):
     """Enable User model's 'translation' of JSON data to/from APIs
