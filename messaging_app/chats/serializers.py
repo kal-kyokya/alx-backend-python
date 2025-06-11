@@ -68,6 +68,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     	serializers.ModelSerializer: Contains the required methodss for actual serialization
     """
 
+    serializers.CharField
+
     class Meta:
         model = User
         fields = (
