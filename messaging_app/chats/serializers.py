@@ -16,13 +16,13 @@ response content is handled by parsers and renderers.
 from rest_framework import serializers
 from .models import User, Message, Conversation
 
-
+# Enable User model's 'translation' to/from JSON in API communications
 class UserListSerializer(serializers.ModelSerializer):
-    """Enable User model's 'translation'  to/from JSON for API communications
+    """Serves in listing/nesting user informations without sensitive attributes
     Inheritance:
     	serializers.ModelSerializer: Contains the required methodss for actual serialization
     """
-    # For listing/nesting info without sensitive info
+
     full_name = serializers.SerializerMethodField()
 
     class Meta:
@@ -60,6 +60,28 @@ class UserListSerializer(serializers.ModelSerializer):
                     "Kindly: Phone number must start with a '+' sign"
                 )
             return phone_no
+
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """Serves in displaying full user details, e.g: User profile
+    Inheritance:
+    	serializers.ModelSerializer: Contains the required methodss for actual serialization
+    """
+
+    class Meta:
+        model = User
+        fields = (
+            'user_id', 'first_name', 'last_name',
+            'email', 'phone_number', 'date_joined',
+            'is_staff', 'is_active', 'last_login'
+        )
+
+        read_only_fields = (
+            'user_id', 'date_joined',
+            'last_login', 'is_staff',
+            'is_active'
+        )
+
 
 class MessageSerializer(serializers.ModelSerializer):
     """Enable Message model's 'translation' of JSON data to/from APIs
