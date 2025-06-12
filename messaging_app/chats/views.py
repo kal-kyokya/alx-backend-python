@@ -131,3 +131,25 @@ class MessageViewSet(viewsets.ModelViewSet):
             sender=self.request.user,
             conversation=conversation
         )
+
+    def perform_update(self, serializer):
+        """Ensures only the sender can update their message
+        Args:
+        	self: A representation of the current class instance
+        	serializer: The object handling conversion to/from JSON formats
+        Return:
+        	None if all is good, raises permissions Error otherwise
+        """
+        if serializer.instance.sender != self.request.user:
+            raise permissions.PermissionDenied('You cannot update messages sent by others')
+
+        # Prevent users from changing the sender or conversation of existing messages
+        if 'conversation' in serializer.validated_data and \
+           serializer.validated_data['conversation'] != serializer.instance.conversation:
+            raise permissions.PermissionDenied('You cannot change the conversation of a message.')
+
+        if 'conversation' in serializer.validated_data and\
+           serializer.validated_data['sender'] != serializer.instance.sender:
+            raise permissions.PermissionDenied('You cannot change the sender of a message.')
+
+        serializer.save()
