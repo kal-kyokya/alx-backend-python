@@ -30,6 +30,21 @@ class ConversationViewSet(viewsets.ModelViewSet):
             return self.request.user.conversations.all().distinct()
         return Conversation.objects.none()
 
+    def perform_create(self, serializer):
+        """Add the creating user as a participant if not explicitly provided
+        Args:
+        	self: A representation of the current class instance
+        	serializer: The object handling conversion to/from JSON formats
+        Return:
+        	None
+        """
+        participants_from_request = serializer.validated_data.get('participants', [])
+
+        if self.request.user not in participants_from_request:
+            participants_from_request.append(self.request.user)
+
+        serializer.save(participants=participants_from_request)
+
 
 class MessageViewSet(viewsets.ModelViewSet):
     """A 'viewset' for handling operations for the message model
