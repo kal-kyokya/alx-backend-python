@@ -1,9 +1,13 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from .serializers import ConversationSerializer, MessageSerializer
 from .filters import MessageFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsParticipantOfConversation
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from .pagination import CustomPagination
+from rest_framework.response import Response
+from .models import Message, Conversation
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -53,5 +57,48 @@ class MessageViewSet(viewsets.ModelViewSet):
     """
 
     serializer_class = MessageSerializer
+    authentication_class = [JWTAuthentication]
+    permission_classes = [
+        permissions.IsAuthenticated,
+        IsSenderOrReadOnly
+    ]
+    pagination_class = CustomPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = MessageFilter
+
+    def get_queryset(self):
+        """Filter messages to only those within a conversation the current user is part of
+        Args:
+        	self: Instanciation of the current class
+        Return:
+        	A list of messages or a 403 error if user not authenticated
+        """
+        if not self.request.user.is_authenticated:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        conversation_pk = self.kwargs.get('conversation_pk')
+        if not conversation_pk:
+            user_conversations = self.request.user.conversation.all()
+            return Message.objects.filter(
+                conversation__in=user_conversations
+            ).select_related(
+                'sender', 'conversation'
+            ).order_by(
+                'created_at'
+            )
+
+        try:
+            conversation = Conversation.objects.get(
+                conversation_id=conversation_pk,
+                participants=self.request.user
+            )
+        except Conversation.DoesNotExist:
+            raise status.HTTP_404_NOT_FOUND('Conversation not found or you are not a participant.')
+
+        return Message.objects.filter(
+            conversation=conversation
+        ).select_related(
+            'sender', 'conversation'
+        ).order_by(
+            'created_at'
+        )
