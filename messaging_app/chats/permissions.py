@@ -51,4 +51,4 @@ class IsParticipantOfConversation(permissions.BasePermission):
         	request: The object sent by the user as request
         	view: The function operating at the logic layer
         """
-        return request.user and request.user_is_authenticated
+        return request.user and request.user.is_authenticated
