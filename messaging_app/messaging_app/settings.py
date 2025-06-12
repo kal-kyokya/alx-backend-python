@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'DEFAULT_AUTHENTICATION_CLASSES',
     'rest_framework.authentication.SessionAuthentication',
     'chats',
+    'rest_framework_simplejwt',
 ]
 
 contain: []
