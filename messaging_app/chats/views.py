@@ -102,3 +102,32 @@ class MessageViewSet(viewsets.ModelViewSet):
         ).order_by(
             'created_at'
         )
+
+    def perform_create(self, serializer):
+        """Automatically assigns authenticated user as sender
+        Args:
+        	self: A representation of the current class instance
+        	serializer: The object handling conversion to/from JSON formats
+        Return:
+        	None
+        """
+        conversation_pk = self.kwargs.get('conversation_pk')
+        if not conversation_pk:
+            raise serializers.ValidationError(
+                {'conversation_pk': 'Conversation ID must be provided in the URL path.'}
+            )
+        try:
+            # Verify user is a participant of the conversation
+            conversation = Conversation.objects.get(
+                conversation_id=conversation_pk,
+                participants=self.request.user
+            )
+        except Conversation.DoesNotExist:
+            raise permissions.PermissionDenied(
+                {'Invalid Conversation ID or you are not a participant of this conversation'}
+            )
+
+        serializer.save(
+            sender=self.request.user,
+            conversation=conversation
+        )
