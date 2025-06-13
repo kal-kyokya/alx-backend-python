@@ -1,6 +1,7 @@
 from datetime import datetime
 import os
 from django.http import JsonResponse
+import time
 
 
 class RequestLoggingMiddleware():
@@ -45,9 +46,6 @@ class RestrictAccessByTimeMiddleware:
         response = self.get_response(request)
         return response
 
-
-import time
-from django.http import JsonResponse
 
 class OffensiveLanguageMiddleware:
     """
@@ -96,5 +94,31 @@ class OffensiveLanguageMiddleware:
             self.message_log[client_ip].append(current_time)
 
         # Allow request to proceed
+        response = self.get_response(request)
+        return response
+
+
+class RolePermissionMiddleware:
+    """
+    Middleware to restrict access to admin or moderator roles only.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # Optional: Only restrict certain endpoints (e.g., admin-only routes)
+        if '/messages/' in request.path or '/conversations/' in request.path:
+            user = request.user
+
+            # If user is not authenticated, block immediately
+            if not user.is_authenticated:
+                return JsonResponse({"detail": "Authentication required."}, status=403)
+
+            # Assuming the user model has a 'role' field like user.role
+            if not hasattr(user, 'role') or user.role not in ['admin', 'moderator']:
+                return JsonResponse({"detail": "You do not have permission to access this resource."}, status=403)
+
+        # Allow request to continue
         response = self.get_response(request)
         return response
