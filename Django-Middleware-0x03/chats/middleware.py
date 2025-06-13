@@ -98,7 +98,7 @@ class OffensiveLanguageMiddleware:
         return response
 
 
-class RolePermissionMiddleware:
+class RolepermissionMiddleware:
     """
     Middleware to restrict access to admin or moderator roles only.
     """
