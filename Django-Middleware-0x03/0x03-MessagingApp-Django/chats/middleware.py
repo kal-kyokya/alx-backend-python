@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+"""
+'middleware'
+"""
 from datetime import datetime
 import os
 from django.http import JsonResponse
@@ -14,7 +18,7 @@ class RequestLoggingMiddleware():
         log_file_path = os.path.join(parent_dir, 'requests.log')
 
         with open(log_file_path, 'a') as log_file:
-            log = f"\n{datetimenow()} - User: {request.user} - Path: {request.path}"
+            log = f"\n{datetime.now()} - User: {request.user} - Path: {request.path}"
             print(log)
             log_file.write(log)
         response = self.get_response(request)
