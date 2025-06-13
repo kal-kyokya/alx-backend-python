@@ -44,3 +44,57 @@ class RestrictAccessByTimeMiddleware:
 
         response = self.get_response(request)
         return response
+
+
+import time
+from django.http import JsonResponse
+
+class OffensiveLanguageMiddleware:
+    """
+    Middleware to limit the number of messages a user can send per minute based on their IP.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self.message_log = {}  # { ip: [timestamps] }
+
+    def get_client_ip(self, request):
+        """
+        Extract the client IP address from the request.
+        """
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
+
+    def __call__(self, request):
+        # Only limit POST requests to chat/message endpoints
+        if request.method == 'POST' and '/messages/' in request.path:
+            client_ip = self.get_client_ip(request)
+            current_time = time.time()
+
+            # Initialize log if IP is not tracked yet
+            if client_ip not in self.message_log:
+                self.message_log[client_ip] = []
+
+            # Remove timestamps older than 60 seconds
+            self.message_log[client_ip] = [
+                timestamp for timestamp in self.message_log[client_ip]
+                if current_time - timestamp < 60
+            ]
+
+            # If more than 5 messages in the last minute → Block
+            if len(self.message_log[client_ip]) >= 5:
+                return JsonResponse(
+                    {"detail": "Rate limit exceeded: Maximum 5 messages per minute allowed."},
+                    status=429
+                )
+
+            # Log this message timestamp
+            self.message_log[client_ip].append(current_time)
+
+        # Allow request to proceed
+        response = self.get_response(request)
+        return response
