@@ -61,11 +61,21 @@ class MessageHistory(models.Model):
     """
 
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    content = models.TextField()
+    old_content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    edited_by = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='editor', verbose_name='Edited By')
+    message = models.ForeignKey(Message, on_delete=models.CASCADE,
+                                related_name='history_entries'
+                                verbose_name='Original Message')
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Message History'
+        verbose_name_plural = 'Message History'
 
     def __str__(self):
         """Expected output upon print operations
@@ -83,13 +93,26 @@ class Notification(models.Model):
     """
 
     notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    message = models.CharField(max_length=255)
+    detail = models.CharField(max_length=255,
+                              verbose_name='Notification detail')
     timestamp = models.DateTimeField(auto_now_add=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='notifications', verbose_name='User')
+    message = models.ForeignKey(Message, on_delete=models.SET_NULL,
+                                related_name='notifications', null=True,
+                                verbose_name='Related Message', blank=True)
+    was_read = models.BooleanField(default=False, verbose_name='Was Read')
+
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = 'Notification'
+        verbose_name_plural = 'Notifications'
 
     def __str__(self):
         """Expected output upon print operations
         """
-        return f"This is notification {self.notification_id} sent at {self.timestamp}"
+        status = 'Read' if self.was_read else 'unread'
+        return f"This is notification {self.detail[:32]} sent to {self.user.username} - Status: {status}"
 
 
 # -------------------------------------------------------
