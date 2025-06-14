@@ -48,6 +48,25 @@ class Message(models.Model):
         return f"This is message {self.message_id} sent by {self.sender}"
 
 
+# ---------------------------------------------------------
+# The Notification model for content sent to users
+# ---------------------------------------------------------
+class Notification(models.Model):
+    """Blueprint for all Notification objects
+    Inheritance:
+    	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
+    """
+
+    notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """Expected output upon print operations
+        """
+        return f"This is notification {self.notification_id} sent at {self.timestamp}"
+
+
 # -------------------------------------------------------
 # The Conversation model tracking user interactions
 # -------------------------------------------------------
