@@ -13,7 +13,6 @@ class User(AbstractUser):
     	AbstractUser: Base class containing methods enabling definition & manipulation of User objects
     """
 
-    user_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField()
     username = models.CharField(max_length=25)
     first_name = models.CharField(max_length=25)
@@ -35,7 +34,6 @@ class Message(models.Model):
     	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
     """
 
-    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -60,7 +58,6 @@ class MessageHistory(models.Model):
     	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
     """
 
-    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     old_content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -92,7 +89,6 @@ class Notification(models.Model):
     	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
     """
 
-    notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     detail = models.CharField(max_length=255,
                               verbose_name='Notification detail')
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -124,7 +120,6 @@ class Conversation(models.Model):
     	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
     """
 
-    conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     participants = models.ManyToManyField(User, related_name='conversations')
