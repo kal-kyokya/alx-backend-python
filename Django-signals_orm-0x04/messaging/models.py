@@ -41,11 +41,35 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, on_delete=models.CASCADE)
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    edited = models.BooleanField(default=False)
+    edited_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         """Expected output upon print operations
         """
         return f"This is message {self.message_id} sent by {self.sender}"
+
+
+# ---------------------------------------------------------
+# The Message History model for old versions of messages
+# ---------------------------------------------------------
+class MessageHistory(models.Model):
+    """Blueprint for all MessageHistory objects
+    Inheritance:
+    	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
+    """
+
+    message_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
+    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+
+    def __str__(self):
+        """Expected output upon print operations
+        """
+        return f"This is old message {self.message_id} sent by {self.sender}"
 
 
 # ---------------------------------------------------------
