@@ -58,7 +58,7 @@ class Notification(models.Model):
     """
 
     notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    content = models.CharField(max_length=255)
+    message = models.CharField(max_length=255)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
