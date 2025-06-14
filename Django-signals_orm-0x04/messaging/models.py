@@ -43,6 +43,7 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
     edited = models.BooleanField(default=False)
     edited_at = models.DateTimeField(auto_now=True)
+    edited_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         """Expected output upon print operations
