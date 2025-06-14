@@ -42,6 +42,9 @@ class Message(models.Model):
     edited = models.BooleanField(default=False)
     edited_at = models.DateTimeField(auto_now=True)
     edited_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    parent_message = models.ForeignKey(
+        'self', null=True, blank=True,
+        on_delete=models.CASCADE, related_name='replies')
 
     def __str__(self):
         """Expected output upon print operations
