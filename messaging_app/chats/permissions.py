@@ -1,17 +1,17 @@
 from rest_framework import permissions
 
 
-class ISSenderOrReadOnly(permissions.BasePermission):
-    """Allow only participants in a conversation to send, view, update and delete messages.
+class IsSenderOrReadOnly(permissions.BasePermission):
+    """Only allows participants in a conversation to send, view, update & delete messages.
     Read-only access is allowed for authenticated user.
     Inheritance:
-    	permissions.BasePermission: Enable access to authorization facilitating methods and attributes
+    	permissions.BasePermission: Enable access to authorization-facilitating methods and attributes
     """
 
     message = "You do not have permission to perform this action"
 
     def has_object_permission(self, request, view, message_obj):
-        """Manage and asserts read and write permissions.
+        """Manages and asserts read and write permissions.
         Args:
         	self: A representation of the class instance
         	request: The object sent by the user as request

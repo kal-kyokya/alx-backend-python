@@ -11,7 +11,7 @@ from .models import Message, Conversation
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
-    """A 'viewset' for handling operations for the conversation model
+    """A 'viewset' (collection of views) handling the Conversation model
     Inheritance:
     	viewsets.ModelViewSet: Collection of Django predefined CRUD executing methods and required attributes.
     """
@@ -28,7 +28,7 @@ class ConversationViewSet(viewsets.ModelViewSet):
         Args:
         	self: An object representation of the class instance
         return:
-        	Every conversations the user participate in, or None
+        	Every conversations associated with the user, or an empty set
         """
         if self.request.user.is_authenticated:
             return self.request.user.conversations.all().distinct()
