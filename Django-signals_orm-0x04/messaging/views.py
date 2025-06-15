@@ -82,6 +82,7 @@ class MessageCreateView(generics.CreateAPIView):
         except Conversation.DoesNotExist:
             return Response({'error': 'Conversation not found.'}, status=status.HTTP_404_NOT_FOUND)
 
+        "Test out receiver placement"
         parent_message = None
         if parent_message_id:
             try:
