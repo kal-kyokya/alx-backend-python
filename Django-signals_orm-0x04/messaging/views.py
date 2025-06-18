@@ -1,5 +1,7 @@
 from rest_framweork import generics
 from .models import Message
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from django.contrib.decorators import login_required
 from django.contrib.auth import logout # Remove the authenticated user's ID from the request and flush their session data
@@ -21,6 +23,8 @@ def delete_user(request):
     else:
         return HttpResponse('Method not allowed')
 
+
+@method_decorator(cache_page(60), name='dispatch') # 60 seconds cache
 class ConversationDetailView(generics.RetrieveAPIView):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
