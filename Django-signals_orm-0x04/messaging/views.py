@@ -1,3 +1,5 @@
+from rest_framweork import generics
+from .models import Message
 from django.http import HttpResponse
 from django.contrib.decorators import login_required
 from django.contrib.auth import logout # Remove the authenticated user's ID from the request and flush their session data
@@ -100,3 +102,33 @@ class MessageCreateView(generics.CreateAPIView):
 
         serializer = self.get_serializer(message)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+class UnreadMessagesView(generics.ListAPIView):
+    """Handles unread messages
+    """
+    serializer_class = MessageSerializer
+    permissions_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Message.unread.for_user(self.request.user)
+
+
+class MarkMessageReadView(generics.UpdateAPIView):
+    """Ensures messages are marked as read upon opening
+    """
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permissions_classes = [IsAuthenticated]
+
+    def update(self, request, *args, **kwargs):
+        message = self.get_object()
+
+        if request.user not in message.conversation.participants.all():
+            return Response({'error': 'Permission dnied.'},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        message.read = True
+        message.save()
+
+        return Response({'message': 'Message marked as read.'})

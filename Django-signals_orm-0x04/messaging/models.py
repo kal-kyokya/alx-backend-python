@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 from django.contrib.auth.models import AbstractUser
+from .managers import UnreadMessagesManager
 
 
 # -----------------------------------------------------
@@ -33,6 +34,8 @@ class Message(models.Model):
     Inheritance:
     	models.Model: Base class containing methods facilitating definition and manipulation of custom model objects
     """
+    objects = models.Manager() # Default manager
+    unread = UnreadMessagesManager() # Custom manager
 
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -52,6 +55,7 @@ class Message(models.Model):
         'self', null=True, blank=True,
         on_delete=models.CASCADE,
         related_name='replies')
+    read = models.BooleanField(default=False)
 
     def __str__(self):
         """Expected output upon print operations
@@ -117,7 +121,7 @@ class Notification(models.Model):
     def __str__(self):
         """Expected output upon print operations
         """
-        status = 'Read' if self.was_read else 'Unread'
+        status = 'read' if self.was_read else 'unread'
         return f"This is notification {self.detail[:32]} sent to {self.user.username} - Status: {status}"
 
 
