@@ -110,7 +110,7 @@ class UnreadMessagesView(generics.ListAPIView):
     serializer_class = MessageSerializer
     permissions_classes = [IsAuthenticated]
 
-    # Only returns a selected group of table fields
+    # Return a selected group of table fields using '.only()'
     def get_queryset(self):
         return Message.unread.unread_for_user(self.request.user)
 
