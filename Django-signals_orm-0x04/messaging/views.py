@@ -105,13 +105,14 @@ class MessageCreateView(generics.CreateAPIView):
 
 
 class UnreadMessagesView(generics.ListAPIView):
-    """Handles unread messages
+    """Return unread messages for listing
     """
     serializer_class = MessageSerializer
     permissions_classes = [IsAuthenticated]
 
+    # Only returns a selected group of table fields
     def get_queryset(self):
-        return Message.unread.for_user(self.request.user)
+        return Message.unread.unread_for_user(self.request.user)
 
 
 class MarkMessageReadView(generics.UpdateAPIView):
