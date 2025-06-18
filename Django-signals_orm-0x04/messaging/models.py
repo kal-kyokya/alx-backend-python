@@ -36,15 +36,22 @@ class Message(models.Model):
 
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE)
-    conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE)
+    sender = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='sent_messages')
+    receiver = models.ForeignKey(
+        User, on_delete=models.CASCADE,
+        related_name='received_messages')
+    conversation = models.ForeignKey(
+        Conversation, on_delete=models.CASCADE,
+        related_name='messages')
     edited = models.BooleanField(default=False)
     edited_at = models.DateTimeField(auto_now=True)
     edited_by = models.ForeignKey(User, on_delete=models.CASCADE)
     parent_message = models.ForeignKey(
         'self', null=True, blank=True,
-        on_delete=models.CASCADE, related_name='replies')
+        on_delete=models.CASCADE,
+        related_name='replies')
 
     def __str__(self):
         """Expected output upon print operations
@@ -110,7 +117,7 @@ class Notification(models.Model):
     def __str__(self):
         """Expected output upon print operations
         """
-        status = 'Read' if self.was_read else 'unread'
+        status = 'Read' if self.was_read else 'Unread'
         return f"This is notification {self.detail[:32]} sent to {self.user.username} - Status: {status}"
 
 
