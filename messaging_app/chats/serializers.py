@@ -55,7 +55,7 @@ class UserListSerializer(serializers.ModelSerializer):
             Return:
             	Raises a 'serializers.ValidationError' if input violates the rule, 'phone_no' otherwise
             """
-            if not phone_value.startswith('+'):
+            if not phone_no.startswith('+'):
                 raise serializers.ValidationError(
                     "Kindly: Phone number must start with a '+' sign"
                 )

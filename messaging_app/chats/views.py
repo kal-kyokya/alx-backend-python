@@ -1,12 +1,12 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions, status
+from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import ConversationSerializer, MessageSerializer
 from .filters import MessageFilter
-from django_filters.rest_framework import DjangoFilterBackend
 from .permissions import IsParticipantOfConversation
-from rest_framework_simplejwt.authentication import JWTAuthentication
 from .pagination import CustomPagination
-from rest_framework.response import Response
 from .models import Message, Conversation
 
 
