@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "🔁 Triggering rolling update with version 2.0..."
+kubectl apply -f blue_deployment.yaml
+
+echo "⏳ Watching rollout status..."
+kubectl rollout status deployment/messaging-app-blue
+
+echo "🌐 Testing app availability during update..."
+for i in {1..20}
+do
+  curl -s http://localhost:8000/ > /dev/null && echo "✅ Request $i: OK" || echo "❌ Request $i: Failed"
+  sleep 1
+done
+
+echo "📦 Current running pods:"
+kubectl get pods -l app=messaging-app,version=blue
