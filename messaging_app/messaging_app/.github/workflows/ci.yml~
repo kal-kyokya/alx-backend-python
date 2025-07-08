@@ -1,0 +1,42 @@
+name: Django Messaging App Ci
+
+on:
+	push:
+		paths:
+			- 'messaging_app/**'
+	pull_request:
+		paths:
+			- 'messaging_app/**'
+
+jobs:
+	test:
+		runs-on: ubuntu-latest
+
+		services:
+			mysql:
+				image: mysql:8.0
+				env:
+					MYSQL_DATABASE: messaging_db
+					MYSQL_USER: django_user
+					MYSQL_PASSWORD: secure_password
+					MYSQL_ROOT_PASSWORD: rootpass
+				ports:
+					- 3306:3306
+				options: >-
+					 --health-cmd="mysqlqdmin ping"
+					 --health-interval=10s
+					 --health-timeout=5s
+					 --health-retries=5
+
+		env:
+			MYSQL_DATABASE: messaging_db
+			MYSQL_USER: django_user
+			MYSQL_PASSWORD: secure_password
+			MYSQL_HOST: 127.0.0.1
+			MYSQL_PORT: 3306
+			DJANGO_SECRET_KEY: fake-key-for-ci
+			DJANGO_DEBUG: false
+
+		steps:
+			- name: Checkout code
+			  uses: actions/checkout@v4
