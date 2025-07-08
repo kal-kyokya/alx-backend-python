@@ -1,42 +1,63 @@
 pipeline {
-	 agent any
+   agent any
 
-	 environment {
-	 	     VENV_DIR = 'venv'
-	 }
+   environment {
+          VENV_DIR = 'venv'
+         IMAGE_NAME = ''
+         IMAGE_TAG = 'latest'
+   }
 
-	 stages {
-	 	stage('Checkout') {
-				  steps {
-				  	git credentialsId: '', url: '', git branch: 'main'
-				  }
-		}
+   stages {
+     stage('Checkout') {
+          steps {
+            git credentialsId: '', url: '', git branch: 'main'
+          }
+    }
 
-		stage('Install Dependencies') {
-			       steps {
-			       	     sh 'python3 -m venv $VENV_DIR'
-				     sh './$VENV_DIR/bin/pip3 install --upgrade pip'
-				     sh './$VENV_DIR/bin/pip3 install -r messaging_app/requirements.txt'
-			       }
-		}
+    stage('Install Dependencies') {
+             steps {
+                    sh 'python3 -m venv $VENV_DIR'
+             sh './$VENV_DIR/bin/pip3 install --upgrade pip'
+             sh './$VENV_DIR/bin/pip3 install -r messaging_app/requirements.txt'
+             }
+    }
 
-		stage('Run Tests') {
-			  steps {
-			  	sh './$VENV_DIR/bin/pytest messaging_app --junitxml=report.xml'
-				sh './$VENV_DIR/bin/python messaging_app/manage.py test'
-			  }
-		}
+    stage('Run Tests') {
+        steps {
+          sh './$VENV_DIR/bin/pytest messaging_app --junitxml=report.xml'
+          sh './$VENV_DIR/bin/python3 messaging_app/manage.py test'
+        }
+    }
 
-		stage('Publish Report') {
-			  steps {
-			  	junit 'report.xml'
-			  }
-		}
-	 }
+    stage('Publish Report') {
+        steps {
+          junit 'report.xml'
+        }
+    }
 
-	 post {
-	      always {
-	      	     echo '--> Pipeline Completed'
-	      }
-	 }
+    stage('Build Docker Image') {
+        steps {
+          script {
+               sh "docker build -t $IMAGE_NAME:$IMAGE_TAG ./messaging_app"
+          }
+        }
+    }
+
+    stage('Push Docker Image') {
+          steps {
+              withCredentials([usernamePassword(credentialsId: '', usernameVariable: '', passwordVaraible: '')]) {
+                sh """
+                echo '$DOCKER_PASS' | docker login -u '$DOCKER_USER' --password-stdin
+                docker push $IMAGE_NAME:$IMAGE_TAG
+                """
+              }
+          }
+     }
+   }
+
+   post {
+        always {
+               echo '--> Pipeline Completed'
+        }
+   }
 }
