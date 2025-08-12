@@ -75,6 +75,7 @@ if __name__ == "__main__":
 
     with DatabaseConnection() as conn:
         cursor = conn.cursor()
+        # SELECT * FROM users
         cursor.execute("SELECT name, email FROM {} LIMIT 5".format(DB_TABLE_NAME))
 
         for user in cursor.fetchall():
